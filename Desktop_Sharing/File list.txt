@@ -1,0 +1,16 @@
+this file tells what files will be in the main directory when the software to ready to publish.
+
+server-side:
+CentrolCenter.exe
+CentrolCenterENU.dll	//if you want Chinese edition, remove this file. if you alreay have this file, the language is still Chinese, rename this file to "ControlCenterLOC.dll"
+Config.ini
+Group			//this is a directory
+
+
+client-side:
+Peer.exe
+PeerENU.dll		//language dll like ControlCenterENU.dll
+Config.ini
+GlobalHook.dll
+
+Note that these files can be find in the project directory except the exe files.
