@@ -53,7 +53,9 @@ public:
     AVIOContext* m_p_AVIOContext;
     int m_result;
     enum AVCodecID m_AVCodecID;
+    enum AVCodecID m_AVCodecID_audio;
     unsigned int m_video_stream_index;
+    unsigned int m_audio_stream_index;
     AVFormatContext* m_p_fmt_ctx;
     BOOL m_loop;
     HANDLE m_thread_handle;

@@ -90,12 +90,17 @@ BOOL CPSDecoderDlg::OnInitDialog()
 
     m_result = avformat_find_stream_info(m_p_fmt_ctx, NULL);
 
-    for(m_video_stream_index = 0; m_video_stream_index < m_p_fmt_ctx->nb_streams; m_video_stream_index++)
+    for(unsigned int i = 0; i < m_p_fmt_ctx->nb_streams; i++)
     {
-        if(AVMEDIA_TYPE_VIDEO == m_p_fmt_ctx->streams[m_video_stream_index]->codec->codec_type)
+        if(AVMEDIA_TYPE_VIDEO == m_p_fmt_ctx->streams[i]->codec->codec_type)
         {
-            m_AVCodecID = m_p_fmt_ctx->streams[m_video_stream_index]->codec->codec_id;
-            break;
+            m_AVCodecID = m_p_fmt_ctx->streams[i]->codec->codec_id;
+            m_video_stream_index = i;
+        }
+        if(AVMEDIA_TYPE_AUDIO == m_p_fmt_ctx->streams[i]->codec->codec_type)
+        {
+            m_AVCodecID_audio = m_p_fmt_ctx->streams[i]->codec->codec_id;
+            m_audio_stream_index = i;
         }
     }
 
@@ -197,8 +202,11 @@ DWORD WINAPI decoding_thread(LPVOID lpParam)
     AVPacket* pAVPacket = (AVPacket*)av_malloc(sizeof(AVPacket));
     CPSDecoderDlg* pCPSDecoderDlg = (CPSDecoderDlg*)lpParam;
     AVCodec* pCodec = avcodec_find_decoder(pCPSDecoderDlg->m_AVCodecID);
+    AVCodec* pCodecAudio = avcodec_find_decoder(pCPSDecoderDlg->m_AVCodecID_audio);
     AVCodecContext* pCodecCtx = pCPSDecoderDlg->m_p_fmt_ctx->streams[pCPSDecoderDlg->m_video_stream_index]->codec;
+    AVCodecContext* pCodecCtxAudio = pCPSDecoderDlg->m_p_fmt_ctx->streams[pCPSDecoderDlg->m_audio_stream_index]->codec;
     AVFrame* pFrame = av_frame_alloc();
+    AVFrame* pFrameAudio = av_frame_alloc();
 
     uint8_t* RGB24Data[4];
     int RGB24Linesize[4];
@@ -231,6 +239,7 @@ DWORD WINAPI decoding_thread(LPVOID lpParam)
     got_picture = SetStretchBltMode(hDC, COLORONCOLOR);
 
     got_picture = avcodec_open2(pCodecCtx, pCodec, NULL);
+    got_picture = avcodec_open2(pCodecCtxAudio, pCodecAudio, NULL);
 
     uint8_t* p_uint8_t_temp;
 
@@ -256,6 +265,14 @@ DWORD WINAPI decoding_thread(LPVOID lpParam)
                 got_picture = StretchDIBits(hDC, 0, 0, PlayingWidth, PlayingHeight, 0, 0, pCodecCtx->width, pCodecCtx->height, RGB24Data[0], (BITMAPINFO*)&bmpinfo, DIB_RGB_COLORS, SRCCOPY);
             }
         }
+        if(pAVPacket->stream_index == pCPSDecoderDlg->m_audio_stream_index)
+        {
+            avcodec_decode_audio4(pCodecCtxAudio, pFrameAudio, &got_picture, pAVPacket);
+            if(got_picture)
+            {
+                got_picture = 1;
+            }
+        }
 
         av_free_packet(pAVPacket);
     }
@@ -263,7 +280,9 @@ DWORD WINAPI decoding_thread(LPVOID lpParam)
     sws_freeContext(img_convert_ctx);
     av_freep(&RGB24Data[0]);
     av_frame_free(&pFrame);
+    av_frame_free(&pFrameAudio);
     avcodec_close(pCodecCtx);
+    avcodec_close(pCodecCtxAudio);
 
     ReleaseDC(pCPSDecoderDlg->m_playing_HWND, hDC);
 
