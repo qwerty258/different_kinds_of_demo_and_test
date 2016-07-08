@@ -33,8 +33,8 @@ void dealWithFindData(WIN32_FIND_DATA* pffd, TCHAR* dir)
         return;
     }
 
-    TCHAR* newPath = calloc(_tcsclen(dir) + 30 + 260, sizeof(TCHAR));
-    TCHAR* oldPath = calloc(_tcsclen(dir) + 260, sizeof(TCHAR));
+    TCHAR* newPath = (TCHAR*)calloc(_tcsclen(dir) + 30 + 260, sizeof(TCHAR));
+    TCHAR* oldPath = (TCHAR*)calloc(_tcsclen(dir) + 260, sizeof(TCHAR));
 
     FileTimeToSystemTime(&pffd->ftLastWriteTime, &stUTC);
     SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
@@ -45,9 +45,10 @@ void dealWithFindData(WIN32_FIND_DATA* pffd, TCHAR* dir)
     if(INVALID_FILE_ATTRIBUTES == GetFileAttributes(newPath))
         CreateDirectory(newPath, NULL);
 
-    _tcscat(newPath, "\\");
+    _tcscat(newPath, _T("\\"));
     _tcscat(newPath, pffd->cFileName);
-    _tcscat(oldPath, "\\");
+    _tcscat(oldPath, dir);
+    _tcscat(oldPath, _T("\\"));
     _tcscat(oldPath, pffd->cFileName);
 
     MoveFile(oldPath, newPath);
@@ -62,7 +63,7 @@ int _tmain(int argc, _TCHAR* argv[])
     size_t dirlLen = _tcsclen(dir);
     findUpLevelDir(dir);
 
-    TCHAR *searchPath = calloc(dirlLen + 10, sizeof(TCHAR));
+    TCHAR *searchPath = (TCHAR*)calloc(dirlLen + 10, sizeof(TCHAR));
     _tcscat(searchPath, dir);
     _tcscat(searchPath, _T("\\*"));
 
@@ -80,8 +81,6 @@ int _tmain(int argc, _TCHAR* argv[])
     }
 
     FindClose(hFind);
-
-    _tsystem(_T("pause"));
 
     free(searchPath);
 
