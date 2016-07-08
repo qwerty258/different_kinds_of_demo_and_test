@@ -12,14 +12,11 @@ namespace ClassifiedByTime
         static void Main(string[] args)
         {
             string rootDir = Directory.GetCurrentDirectory();
-            Console.Write("Root Dir: ");
-            Console.WriteLine(rootDir);
             DirectoryInfo rootDirInfo = new DirectoryInfo(rootDir);
             foreach (FileInfo fileInfoTemp in rootDirInfo.GetFiles())
             {
                 if (fileInfoTemp.Name.Contains("ClassifiedByTime"))
                     continue;
-                Console.WriteLine(fileInfoTemp.Name);
                 DateTime LastWriteDateTime = fileInfoTemp.LastWriteTime;
 
                 string newPathName = LastWriteDateTime.ToString("yyyy_MM_dd");
@@ -34,8 +31,6 @@ namespace ClassifiedByTime
 
                 File.Move(oldPathName, newPathName);
             }
-
-            Console.ReadLine();
         }
     }
 }
