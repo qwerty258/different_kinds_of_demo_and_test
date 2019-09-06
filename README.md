@@ -1,1 +1,2 @@
-# different_kinds_of_demo_and_test
+# different kinds of demo and test
+Migrating to linux gradually
