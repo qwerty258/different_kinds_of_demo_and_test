@@ -17,5 +17,6 @@
 #
 
 SUBDIRS =                       \
+ffmpeg                          \
 sizeof_data_types               \
 unordered_map_map_and_if_else

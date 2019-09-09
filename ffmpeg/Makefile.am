@@ -16,21 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-AC_INIT([demo_and_test], [0.0], [github.com/qwerty258/demo_and_test])
-AC_CONFIG_AUX_DIR([build-aux])
-AM_INIT_AUTOMAKE([foreign -Wall -Werror])
-AC_PROG_CC
-AC_PROG_CXX
-AM_PROG_AR
-AC_PROG_RANLIB
-AC_SUBST([CFLAGS], ["-ggdb -Wall"])
-AC_SUBST([CXXFLAGS], ["-ggdb -Wall"])
-AC_SUBST([LDADD], [""])
-
-AC_CONFIG_FILES([                   \
-    Makefile                        \
-    ffmpeg/Makefile                 \
-    sizeof_data_types/Makefile      \
-    unordered_map_map_and_if_else/Makefile])
-
-AC_OUTPUT
+bin_PROGRAMS = list_ffmpeg_codecs.elf
+list_ffmpeg_codecs_elf_LDADD = -lavcodec -lavformat
+list_ffmpeg_codecs_elf_SOURCES = list_ffmpeg_codecs.c
