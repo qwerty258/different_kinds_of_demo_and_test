@@ -1,3 +1,21 @@
+// *************************************************************************
+//
+// Copyright (C) 2019  yaofei zheng
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -7,26 +25,7 @@
 #include <time.h>
 using namespace std;
 
-class animal
-{
-public:
-    int fun1(char *a, char *&b);
-    int fun2(char *a, char *&b);
-};
-
-int animal::fun1(char *a, char *&b)
-{
-    cout << "fun1" << endl;
-}
-
-int animal::fun2(char *a, char *&b)
-{
-    cout << "fun2" << endl;
-}
-
-typedef int (animal::*func)(char *, char *&);
-
-int WebConfigProcess(char *Cmd)
+int WebConfigProcess(const char *Cmd)
 {
     int iRet = 1;
     if(iRet == 0)
@@ -265,7 +264,7 @@ int WebConfigProcess(char *Cmd)
     }
     return 0;
 }
-int WebConfigEntry(char *uri)
+int WebConfigEntry(const char *uri)
 {
     if(0 == memcmp(uri, "GetPic.cgi", strlen("GetPic.cgi")))
     {
@@ -284,18 +283,6 @@ int WebConfigEntry(char *uri)
 
 int main(int argc, char *argv[])
 {
-    unordered_map<string, func> test_map;
-    animal test_mice;
-    test_map["the first"] = &animal::fun1;
-    test_map["the secnd"] = &animal::fun2;
-
-    char *x;
-
-    func f_pointer = test_map["the first"];
-    (test_mice.*f_pointer)(x, x);
-    f_pointer = test_map["the secnd"];
-    (test_mice.*f_pointer)(x, x);
-
     unordered_map<string, int> test_unordered;
     map<string, int> test_order;
 
@@ -411,48 +398,44 @@ int main(int argc, char *argv[])
         "User_DelUserGroup.cgi",
         "User_ModUserGroup.cgi"
     };
-    char temp[50];
-    int test_num = 10000000;
 
-    for(int i; i < sizeof(str) / sizeof(str[0]); i++)
+    for(size_t i; i < sizeof(str) / sizeof(str[0]); i++)
     {
         test_unordered[str[i]] = i;
     }
 
-    for(int i; i < sizeof(str) / sizeof(str[0]); i++)
+    for(size_t i; i < sizeof(str) / sizeof(str[0]); i++)
     {
         test_order[str[i]] = i;
     }
 
-    int xx;
-
     timespec begin;
     timespec end;
 
-    char *test_str = "GetPic.cgi";
+    string test_str = "User_ModUserGroup.cgi";
 
     clock_gettime(CLOCK_REALTIME, &begin);
-    xx = test_unordered[test_str];
+    test_unordered[test_str.c_str()];
     clock_gettime(CLOCK_REALTIME, &end);
 
-    printf("test_unordered begin seconds: %d, nano seconds: %d\n", begin.tv_sec, begin.tv_nsec);
-    printf("test_unordered end   seconds: %d, nano seconds: %d\n", end.tv_sec, end.tv_nsec);
-    printf("time: %d\n", end.tv_nsec - begin.tv_nsec);
+    printf("test_unordered begin seconds: %lu, nano seconds: %lu\n", begin.tv_sec, begin.tv_nsec);
+    printf("test_unordered end   seconds: %lu, nano seconds: %lu\n", end.tv_sec, end.tv_nsec);
+    printf("time: %ld\n", end.tv_nsec - begin.tv_nsec);
 
     clock_gettime(CLOCK_REALTIME, &begin);
-    xx = test_order[test_str];
+    test_order[test_str.c_str()];
     clock_gettime(CLOCK_REALTIME, &end);
 
-    printf("test_order begin     seconds: %d, nano seconds: %d\n", begin.tv_sec, begin.tv_nsec);
-    printf("test_order end       seconds: %d, nano seconds: %d\n", end.tv_sec, end.tv_nsec);
-    printf("time: %d\n", end.tv_nsec - begin.tv_nsec);
+    printf("test_order begin     seconds: %lu, nano seconds: %lu\n", begin.tv_sec, begin.tv_nsec);
+    printf("test_order end       seconds: %lu, nano seconds: %lu\n", end.tv_sec, end.tv_nsec);
+    printf("time: %ld\n", end.tv_nsec - begin.tv_nsec);
 
     clock_gettime(CLOCK_REALTIME, &begin);
-    WebConfigEntry(test_str);
+    WebConfigEntry(test_str.c_str());
     clock_gettime(CLOCK_REALTIME, &end);
 
-    printf("if else begin        seconds: %d, nano seconds: %d\n", begin.tv_sec, begin.tv_nsec);
-    printf("if else end          seconds: %d, nano seconds: %d\n", end.tv_sec, end.tv_nsec);
-    printf("time: %d\n", end.tv_nsec - begin.tv_nsec);
+    printf("if else begin        seconds: %lu, nano seconds: %lu\n", begin.tv_sec, begin.tv_nsec);
+    printf("if else end          seconds: %lu, nano seconds: %lu\n", end.tv_sec, end.tv_nsec);
+    printf("time: %ld\n", end.tv_nsec - begin.tv_nsec);
     return 0;
 }

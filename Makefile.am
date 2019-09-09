@@ -16,4 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-SUBDIRS = sizeof_data_types
+SUBDIRS =                       \
+sizeof_data_types               \
+unordered_map_map_and_if_else
