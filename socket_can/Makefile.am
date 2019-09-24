@@ -16,8 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-SUBDIRS =                       \
-ffmpeg                          \
-sizeof_data_types               \
-socket_can                      \
-unordered_map_map_and_if_else
+bin_PROGRAMS = socket_can.elf
+# socket_can_elf_LDADD = -lavcodec -lavformat
+socket_can_elf_SOURCES = socket_can.c

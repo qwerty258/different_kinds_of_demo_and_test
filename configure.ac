@@ -31,6 +31,7 @@ AC_CONFIG_FILES([                   \
     Makefile                        \
     ffmpeg/Makefile                 \
     sizeof_data_types/Makefile      \
+    socket_can/Makefile             \
     unordered_map_map_and_if_else/Makefile])
 
 AC_OUTPUT
