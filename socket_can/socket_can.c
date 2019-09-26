@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdint.h>
+#include <string.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <unistd.h>
@@ -9,6 +11,7 @@
 
 int main(int argc, char *argv[])
 {
+    uint16_t index;
     struct ifreq ifr;
     struct sockaddr_can addr;
     int sockfd;
@@ -52,6 +55,19 @@ int main(int argc, char *argv[])
     if (0 != err)
     {
         printf("bind error\n");
+        return -1;
+    }
+
+    frame.can_id = 0x601;
+    frame.can_dlc = 8;
+    frame.data[0] =0x40;
+    index = 0x6064;
+    memcpy(&frame.data[1], &index, sizeof(uint16_t));
+    frame.data[3] = 0;
+
+    if (0 > send(sockfd, &frame, sizeof(struct can_frame), 0))
+    {
+        printf("send error\n");
         return -1;
     }
 
