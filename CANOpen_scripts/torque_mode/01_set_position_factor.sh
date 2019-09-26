@@ -1,0 +1,5 @@
+#!/bin/bash
+cansend can0 601#40936001
+cansend can0 601#40936002
+cansend can0 601#2393600180000000
+cansend can0 601#2393600201000000
