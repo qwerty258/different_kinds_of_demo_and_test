@@ -16,9 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-SUBDIRS =                       \
-ffmpeg                          \
-macro_vs_const                  \
-sizeof_data_types               \
-socket_can                      \
-unordered_map_map_and_if_else
+bin_PROGRAMS = macro_vs_const.elf
+
+macro_vs_const_elf_SOURCES = macro_vs_const.c
