@@ -17,12 +17,16 @@
 //
 
 #include <stdio.h>
-#define RET (2 * 3)
+#define A 2
+#define B 3
+#define RET (A * B)
 const int a = 2;
 const int b = 3;
 int main(int argc, char *argv[])
 {
     int ret = RET;
+    printf("%d\n", ret);
+    ret = A * B;
     printf("%d\n", ret);
     ret = a * b;
     printf("%d\n", ret);
