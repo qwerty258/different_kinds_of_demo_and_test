@@ -29,6 +29,13 @@ typedef enum
     B
 } enum_define;
 
+typedef struct
+{
+    uint16_t index : 16;
+    uint8_t subindex : 8;
+    uint8_t bitsize : 8;
+} mapping_config_t;
+
 int main(int argc, char *argv[])
 {
     PRINT_SIZE(struct timespec);
@@ -66,5 +73,6 @@ int main(int argc, char *argv[])
     PRINT_SIZE(int_least32_t);
     PRINT_SIZE(int_least64_t);
     PRINT_SIZE(enum_define);
+    PRINT_SIZE(mapping_config_t);
     return 0;
 }
